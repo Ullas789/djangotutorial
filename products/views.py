@@ -1,24 +1,9 @@
 from django.shortcuts import render
 from products.models import Product,Brand,Catageory
 from django.db.models import F
-# Create your views here.
-
-
-# Create your views here.
 from django.http import HttpResponse
+from django.template import loader
 
-
-
-
-# def products(request,employee_id):
-#     Employee_details=Product.objects.filter(id=employee_id).values()
-    
-    
-#     context = {
-#         "Employee_details": Employee_details,
-#     }
-    
-#     return render(request, "Employee_details.html", context)
 
 def display(request,product_P_Id):
     product_details=Product.objects.filter(P_Id=product_P_Id).values()
@@ -59,3 +44,48 @@ def sub_categeories(request,catageory_Cat_Id):
     }
     
     return render(request, "sub_categeories.html", context)
+
+
+
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+def filter(request):
+    all_categories = Product.objects.select_related('Cat_id').values_list('Cat__Cat_name',flat=True).distinct()
+    category_filter = request.GET.get('cat_name', 'All')
+
+    categories = Catageory.objects.all()
+    products = Product.objects.select_related('Cat').order_by('P_name').all()
+    page = request.GET.get('page', 1)
+
+    
+    
+    if category_filter !='All':
+        
+        products = products.filter(Cat__Cat_name=category_filter).order_by('P_name')
+        
+    if category_filter =='All':
+        products = Product.objects.select_related('Cat').order_by('P_name').all()
+        
+    paginator = Paginator(products, 4)
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)  
+   
+
+   
+
+    context = {
+        "page":page,
+        "products": products,
+        "categories": categories,
+        "all_categories": all_categories,
+        "selected_name": category_filter,
+       
+    }
+    print(category_filter)
+    return render(request, "filter.html", context)
+
+

@@ -11,12 +11,17 @@ print(q1)
 
 
 # list all products and filtrer based on cat_name
-q2=Product.objects.filter(Cat__Cat_name='android').values('P_name','Cat__Cat_name')
-print(q2)
-
+q2=Product.objects.filter(Cat__Cat_name='android').all()
+for q in q2:
+    print(q.P_name)
+# list all Catageory
+q=Product.objects.select_related('Cat_id').values_list('Cat__Cat_name',flat=True).distinct()
+print(q)
 # list all category and their products
-q3=Product.objects.select_related('Cat_id').values('P_name','Cat__Cat_name')
-print(q3)
+q3=Product.objects.select_related('Cat_id').values('P_name','Cat__Cat_name').all()
+for q in q3:
+    print(q)
+
 
 #list all products and print brand name
 q4=Product.objects.select_related('B_id').values('P_name','B__B_name')
@@ -43,4 +48,6 @@ q7 = Catageory.objects.filter(Parent__isnull=False).values(
 for q in q7:
     print(q)
 
-
+q8= Catageory.objects.all()
+for q in q8:
+    print(q.Cat_name)

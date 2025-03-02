@@ -1,0 +1,89 @@
+{% load static %}
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  
+  </head>
+  <body>
+    <h1 class="text-center" style="padding-top: 0%; width: 100%;background-color: antiquewhite;">Product List</h1>
+    <div>
+      <div>
+        <form method="GET">
+          <div class="container mt-4">
+              
+              
+              <div class="row mb-4">
+                  <div class="col-md-3">
+                      <label for="cat_name" class="form-label"><strong>Select Category Name</strong></label>
+                      <select style=" width:300px"name="cat_name" id="cat_name" class="form-select mt-2" onchange="this.form.submit()">
+                          <option value="All">All</option>
+                          {% for cat_name in all_categories %}
+                              <option value="{{ cat_name }}" {% if selected_name == cat_name %}selected{% endif %}>
+                                  {{ cat_name }}
+                              </option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div style="margin-left: auto;margin-top:auto"class="col-md-2" >
+               
+                    <a href="{% url 'filter' %}" class="btn btn-secondary" style="margin-top: 45px;width:200px">Reset</a>
+                </div>
+              </div>
+          </div>
+      </form>
+      </div>
+      
+   
+      
+  
+    
+    <div class="row" >
+      {% for product in products%}
+      <div class="col-sm-3" style="margin-top: 20px;">
+        <div class="card" style="border:solid 1px;">
+          <img class="card-img-top" src="{% static 'images/' %}{{ product.photo }}" alt="Card image cap" style="width:300px;height:200px">
+          <div class="card-body" style="text-align: center;background-color: whitesmoke;">
+            <h5 class="card-title"><strong>Name: </strong>{{product.P_name}}</h5>
+            <p class="card-text"><strong>Description: </strong>{{product.P_description}}</p>
+            <p class="card-text"><strong>Brand: </strong>{{product.B.B_name}}</p>
+            <!-- <a href="#" class="btn btn-primary">Button</a> -->
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    </div >
+    <div style="margin-left:50% ;width:20px">
+      
+      {% if products.has_other_pages %}
+      
+      <ul class="pagination" >
+        {% if products.has_previous %}
+          <li ><a href="?cat_name={{selected_name}}&page={{ products.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        
+        {% for i in products.paginator.page_range %}
+          {% if products.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li><a href="?cat_name={{selected_name}}&page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if products.has_next %}
+          <li><a href="?cat_name={{selected_name}}&page={{ products.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+      </ul>
+     
+    {% endif %}
+    
+    </div>
+   
+  </body>
+</html>

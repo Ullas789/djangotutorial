@@ -6,6 +6,7 @@ from django.db import models
 class Brand(models.Model):
     B_Id=models.BigIntegerField(primary_key = True)
     B_name=models.CharField(max_length=100)
+    B_description=models.CharField(max_length=200,default="", editable=False)
    
     
 
@@ -26,6 +27,8 @@ class Product(models.Model):
    
     B=models.ForeignKey(
         "Brand", on_delete=models.CASCADE)
+    P_description=models.CharField(max_length=200,default="", editable=False)
+    photo=models.CharField(max_length=200,default="", editable=False)
    
 
 

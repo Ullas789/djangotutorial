@@ -21,9 +21,11 @@ from . import views
 from django.urls import include, path
 
 urlpatterns = [
+
     path('<int:product_P_Id>/', views.display,name="display"),
     path("",views.index,name="index"),
     path("catageory/",views.catageory,name="catageory"),
-    path("catageory/<int:catageory_Cat_Id>/",views.sub_categeories,name="sub_categeories")
+    path("catageory/<int:catageory_Cat_Id>/",views.sub_categeories,name="sub_categeories"),
+    path("filter/",views.filter,name="filter")
 ]
 
