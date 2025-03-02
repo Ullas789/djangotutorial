@@ -48,12 +48,21 @@ def student_form_view(request):
 def result(request):
     usn = request.GET.get('usn')
     sem = request.GET.get('sem')
+    
     details=Marks.objects.select_related('Student_Id','Sub_Id','Sem_Id').filter(Student_Id__Usn=usn,Sem_Id__Sem=sem).all()
+    print(f"hi {details}")
     total_percentage=Marks.objects.filter(Student_Id__Usn=usn, Sem_Id__Sem=sem).aggregate(Avg("Marks", default=0)).values()
+    if not details.exists():
+        return render(request, 'result.html', {'no_recods':True})
     for d in details:
+        
         name=d.Student_Id.Name
         current_sem=d.Student_Id.Current_sem
-    print(name)
+        
+        print(d.Sem_Id.Sem)
+    
+    
+
     context={
         'usn': usn, 
         'sem': sem,
@@ -61,6 +70,7 @@ def result(request):
         'details':details,
         'name':name,
         'current_sem':current_sem,
+        'no_records':False
         
        
 
